@@ -8,6 +8,11 @@ var walkable: Dictionary = {}
 var occupied: Dictionary = {}
 var room_cells: Dictionary = {}
 
+func reset() -> void:
+    walkable.clear()
+    occupied.clear()
+    room_cells.clear()
+
 func cell_to_world(cell: Vector2i) -> Vector2:
     return Vector2(cell.x * CELL_SIZE + CELL_SIZE * 0.5, cell.y * CELL_SIZE + CELL_SIZE * 0.5)
 
@@ -43,10 +48,18 @@ func occupy(room_id: int, origin: Vector2i, size: Vector2i, is_walkable := true)
             walkable[cell] = true
 
 func add_corridor(cell: Vector2i, room_id: int) -> void:
-    if not in_bounds(cell): return
+    if not in_bounds(cell):
+        return
     occupied[cell] = room_id
     walkable[cell] = true
     room_cells[room_id] = [cell]
+
+func remove_room(room_id: int) -> void:
+    var cells: Array = room_cells.get(room_id, [])
+    for cell in cells:
+        occupied.erase(cell)
+        walkable.erase(cell)
+    room_cells.erase(room_id)
 
 func is_walkable(cell: Vector2i) -> bool:
     return walkable.has(cell)
@@ -62,6 +75,7 @@ func serialize() -> Dictionary:
     var rows: Array = []
     for room_id in room_cells:
         var encoded: Array = []
-        for c: Vector2i in room_cells[room_id]: encoded.append([c.x, c.y])
+        for c: Vector2i in room_cells[room_id]:
+            encoded.append([c.x, c.y])
         rows.append({"id": room_id, "cells": encoded})
     return {"rooms": rows}

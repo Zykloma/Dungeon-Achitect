@@ -2,7 +2,7 @@ extends Node
 
 signal run_reset
 
-const SAVE_VERSION := 1
+const SAVE_VERSION := 2
 
 var lifetime_stats: Dictionary = {
     "gold_earned": 0.0,
@@ -13,6 +13,7 @@ var lifetime_stats: Dictionary = {
     "boss_kills": 0,
     "max_fame": 0.0,
     "deepest_floor": 1,
+    "prestiges": 0,
 }
 
 var dark_essence: int = 0
